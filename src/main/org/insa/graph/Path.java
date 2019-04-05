@@ -2,6 +2,7 @@ package org.insa.graph;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -30,12 +31,43 @@ public class Path {
      * @throws IllegalArgumentException If the list of nodes is not valid, i.e. two
      *         consecutive nodes in the list are not connected in the graph.
      * 
-     * @deprecated Need to be implemented.
      */
     public static Path createFastestPathFromNodes(Graph graph, List<Node> nodes)
             throws IllegalArgumentException {
+    	if(nodes.size()==1) {
+    		if(!graph.getNodes().contains(nodes.get(0))) {
+        		throw new IllegalArgumentException("the list of nodes is not valid");
+        	}
+    		return new Path(graph, nodes.get(0));
+    	}
         List<Arc> arcs = new ArrayList<Arc>();
-        // TODO:
+        boolean added ;
+        double T;
+        for(int i =0;i<nodes.size()-1;i++) {
+        	if(!graph.getNodes().contains(nodes.get(i))) {
+        		throw new IllegalArgumentException("the list of nodes is not valid");
+        	}
+        	added = false;
+        	T=-1;
+        	for(Arc a :nodes.get(i).getSuccessors()) {
+        		if(a.getDestination().equals(nodes.get(i+1))) {
+        			if(T== -1 ) {
+        				arcs.add(a);
+        				T = a.getMinimumTravelTime();
+        			}
+        			else {
+        				if(T > a.getMinimumTravelTime()){
+        					arcs.set(i,a);
+        					T = a.getMinimumTravelTime();
+        				}
+        			}
+        			added = true;
+        		}
+        	}
+        	if(!added) {
+        		throw new IllegalArgumentException("the list of nodes is not valid");
+        	}
+        }
         return new Path(graph, arcs);
     }
 
@@ -51,12 +83,43 @@ public class Path {
      * @throws IllegalArgumentException If the list of nodes is not valid, i.e. two
      *         consecutive nodes in the list are not connected in the graph.
      * 
-     * @deprecated Need to be implemented.
      */
     public static Path createShortestPathFromNodes(Graph graph, List<Node> nodes)
             throws IllegalArgumentException {
+    	if(nodes.size()==1) {
+    		if(!graph.getNodes().contains(nodes.get(0))) {
+        		throw new IllegalArgumentException("the list of nodes is not valid");
+        	}
+    		return new Path(graph, nodes.get(0));
+    	}
         List<Arc> arcs = new ArrayList<Arc>();
-        // TODO:
+        boolean added ;
+        float l;
+        for(int i =0;i<nodes.size()-1;i++) {
+        	if(!graph.getNodes().contains(nodes.get(i))) {
+        		throw new IllegalArgumentException("the list of nodes is not valid");
+        	}
+        	added = false;
+        	l=-1;
+        	for(Arc a :nodes.get(i).getSuccessors()) {
+        		if(a.getDestination().equals(nodes.get(i+1))) {
+        			if(l== -1 ) {
+        				arcs.add(a);
+        				l = a.getLength();
+        			}
+        			else {
+        				if(l > a.getLength()){
+        					arcs.set(i,a);
+        					l = a.getLength();
+        				}
+        			}
+        			added = true;
+        		}
+        	}
+        	if(!added) {
+        		throw new IllegalArgumentException("the list of nodes is not valid");
+        	}
+        }
         return new Path(graph, arcs);
     }
 
@@ -197,12 +260,24 @@ public class Path {
      * </ul>
      * 
      * @return true if the path is valid, false otherwise.
-     * 
-     * @deprecated Need to be implemented.
+     * .
      */
     public boolean isValid() {
-        // TODO:
-        return false;
+        if(this.isEmpty()) {
+        	return true;
+        }
+        if(this.size()==1) {
+        	return true;
+        }
+        Node last =null;
+        boolean isOk = true;
+        for(Arc a : arcs) {
+        	if(last != null) {
+        		isOk=isOk && a.getOrigin().equals(last);
+        	}
+        	last = a.getDestination();
+        }
+        return isOk;
     }
 
     /**
