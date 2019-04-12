@@ -1,16 +1,10 @@
 package org.insa.graph;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-
-import org.insa.algo.AbstractSolution.Status;
 import org.insa.graph.Arc;
-import org.insa.graph.Graph;
 import org.insa.graph.Node;
-import org.insa.graph.Path;
 
-public class Label{
+
+public class Label implements Comparable<Label> {
 	private Node currentNode;
 	private Boolean mark;
 	private double cost ;
@@ -20,6 +14,7 @@ public class Label{
 		this.currentNode = n;
 		this.mark = false; 
 		this.cost = Double.POSITIVE_INFINITY;
+		this.pred=null;
 	}
 	
 	public void setMark(Boolean b) {
@@ -43,11 +38,20 @@ public class Label{
 	}
 	
 	public double getCost() {
-		return this;cost;
+		return this.cost;
 	}
 	
 	public Arc getPred() {
 		return this.pred;
 	}
 	
+	public boolean equals(Label other) {
+	    return this.currentNode.equals(other.getCurrentNode());
+	}
+
+	   
+	public int compareTo(Label other) {
+	    return Double.compare(this.cost, other.getCost());
+	}
+
 }
