@@ -38,12 +38,17 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         notifyOriginProcessed(data.getOrigin());
         
         //PROCEDURE
-        Label x, laby=null;
+        Label x = null, laby=null;
         while(!tas.isEmpty()) {
         	x=tas.findMin();
         	tas.remove(x);
         	x.setMark(true);
         	notifyNodeReached(x.getCurrentNode());
+        	
+        	if(data.getDestination().equals(x.getCurrentNode())) { //destination atteinte et marquée, peut arreter le parcours
+        		break;
+        	}
+        	
         	for(Arc y : x.getCurrentNode().getSuccessors() ) {
         		
         		if (!data.isAllowed(y)) {

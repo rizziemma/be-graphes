@@ -1,0 +1,4 @@
+ne pas utiliser un Arraylist de nodes mais plutot un tableau (Nodes[])
+dans les labels ne pas retenir un node entier masi plutot l'id du node (int)
+comme on a que l'id du node il faut aussi recupere les nodes avec le data.graphes.nodes avec l'id
+verifier les break dans les for
