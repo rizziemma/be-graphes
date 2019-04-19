@@ -34,15 +34,23 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
                 
         	}
         }
+     // Notify observers about the first event (origin processed).
+        notifyOriginProcessed(data.getOrigin());
         
         //PROCEDURE
         Label x, laby=null;
         while(!tas.isEmpty()) {
         	x=tas.findMin();
         	tas.remove(x);
-        	System.out.println("Noeud marqué " + x.toString());
         	x.setMark(true);
+        	notifyNodeReached(x.getCurrentNode());
         	for(Arc y : x.getCurrentNode().getSuccessors() ) {
+        		
+        		if (!data.isAllowed(y)) {
+                    continue;
+                }
+        		
+        		
         		for(Label l : labels) { // on recupère le label associé a l'origine de l'arc y
         			if(l.getCurrentNode().equals(y.getDestination())) {
         				laby=l;
@@ -79,7 +87,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         Label l = labdest;
         
         while(!l.equals(labori)) {
-        	if ((l.getPred()).equals(null)) {
+        	if ((l.getPred())==null) {
         		solution = new ShortestPathSolution(data,Status.INFEASIBLE);
         		return solution;
         	}
@@ -93,6 +101,10 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         		}
         	}
         }
+        
+        // The destination has been found, notify the observers.
+        notifyDestinationReached(data.getDestination());
+        
         nodesSol.add(labori.getCurrentNode());
         Collections.reverse(nodesSol);
         

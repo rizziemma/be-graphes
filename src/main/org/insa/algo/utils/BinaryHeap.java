@@ -152,7 +152,7 @@ public class BinaryHeap<E extends Comparable<E>> implements PriorityQueue<E> {
     	if((i!= -1) && (i < this.currentSize)) {
 	    	array.set(i,array.get(this.currentSize-1));
 	    	
-    		this.percolateUp(i);
+    		//this.percolateUp(i);
     		this.percolateDown(i);
 	    	this.currentSize--;
 	    	
