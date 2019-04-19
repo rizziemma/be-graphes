@@ -1,7 +1,7 @@
 package org.insa.algo.shortestpath;
 
 import java.util.ArrayList;
-
+import java.util.Collections;
 
 import org.insa.graph.Arc;
 import org.insa.graph.Node;
@@ -29,8 +29,8 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         for( Node n : this.data.getGraph().getNodes()) {
         	labels.add(new Label(n));
         	if(n.equals(data.getOrigin())) {
-        		labels.get(labels.size()).setCost(0);
-                tas.insert(labels.get(labels.size()));
+        		labels.get(labels.size()-1).setCost(0);
+                tas.insert(labels.get(labels.size()-1));
                 
         	}
         }
@@ -40,16 +40,17 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         while(!tas.isEmpty()) {
         	x=tas.findMin();
         	tas.remove(x);
+        	System.out.println("Noeud marqué " + x.toString());
         	x.setMark(true);
         	for(Arc y : x.getCurrentNode().getSuccessors() ) {
         		for(Label l : labels) { // on recupère le label associé a l'origine de l'arc y
-        			if(l.getCurrentNode().equals(y.getOrigin())) {
+        			if(l.getCurrentNode().equals(y.getDestination())) {
         				laby=l;
         				break;
         			}
         		}
         		
-        		if(laby.getMark() == false && laby.getCost() > x.getCost() + y.getLength()) {
+        		if(laby.getMark() == false && laby.getCost() >(x.getCost() + y.getLength())) {
         			laby.setCost(x.getCost() + y.getLength());
         			laby.setPred(y);
         			
@@ -77,20 +78,23 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         
         Label l = labdest;
         
-        
-        while(l!=labori) {
-        	if (l.getPred()==null) {
+        while(!l.equals(labori)) {
+        	if ((l.getPred()).equals(null)) {
         		solution = new ShortestPathSolution(data,Status.INFEASIBLE);
         		return solution;
         	}
         	nodesSol.add(l.getCurrentNode());
         	
-        	for(Label lab : labels) {
+        	for(Label lab : labels) { //cherche le label associé au noeud prédecesseur 
         		if(lab.getCurrentNode().equals(l.getPred().getOrigin())) {
         			l=lab;
+        			break;
+        			
         		}
         	}
         }
+        nodesSol.add(labori.getCurrentNode());
+        Collections.reverse(nodesSol);
         
         Path p = Path.createShortestPathFromNodes(this.data.getGraph(), nodesSol);
         solution = new ShortestPathSolution(data,Status.OPTIMAL,p);
