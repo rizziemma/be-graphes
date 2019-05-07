@@ -25,12 +25,12 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         //INITIALISATION
         BinaryHeap<Label> tas = new BinaryHeap<Label>();
 
-        ArrayList<Label> labels=new ArrayList<Label>();
+        Label labels[]=new Label[data.getGraph().size()];
         for( Node n : this.data.getGraph().getNodes()) {
-        	labels.add(new Label(n));
+        	labels[n.getId()]=new Label(n);
         	if(n.equals(data.getOrigin())) {
-        		labels.get(labels.size()-1).setCost(0);
-                tas.insert(labels.get(labels.size()-1));
+        		labels[n.getId()].setCost(0);
+                tas.insert(labels[n.getId()]);
                 
         	}
         }
@@ -56,12 +56,8 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
                 }
         		
         		
-        		for(Label l : labels) { // on recupère le label associé a l'origine de l'arc y
-        			if(l.getCurrentNode().equals(y.getDestination())) {
-        				laby=l;
-        				break;
-        			}
-        		}
+        		laby = labels[y.getDestination().getId()];// on recupère le label associé a l'origine de l'arc y
+        	
         		
         		if(laby.getMark() == false && laby.getCost() >(x.getCost() + y.getLength())) {
         			laby.setCost(x.getCost() + y.getLength());
@@ -80,14 +76,9 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         //on reconstitue la solution 
         ArrayList<Node> nodesSol = new ArrayList<Node>();
         Label labdest=null, labori=null;
-        for(Label l : labels) { // on recupère le label associé a la destination et l'origine du chemin
-			if(l.getCurrentNode().equals(data.getOrigin())) {
-				labori=l;
-			}
-			if(l.getCurrentNode().equals(data.getDestination())) {
-				labdest=l;
-			}
-		}
+        labori = labels[data.getOrigin().getId()];// on recupère le label associé a la destination et l'origine du chemin
+        labdest = labels[data.getDestination().getId()];
+		
         
         Label l = labdest;
         
@@ -98,13 +89,8 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         	}
         	nodesSol.add(l.getCurrentNode());
         	
-        	for(Label lab : labels) { //cherche le label associé au noeud prédecesseur 
-        		if(lab.getCurrentNode().equals(l.getPred().getOrigin())) {
-        			l=lab;
-        			break;
-        			
-        		}
-        	}
+        	l = labels[l.getPred().getOrigin().getId()];//cherche le label associé au noeud prédecesseur 
+        		
         }
         
         // The destination has been found, notify the observers.
