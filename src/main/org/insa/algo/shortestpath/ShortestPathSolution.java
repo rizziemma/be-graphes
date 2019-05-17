@@ -5,6 +5,7 @@ import org.insa.algo.AbstractSolution;
 import org.insa.graph.Arc;
 import org.insa.graph.Path;
 
+
 public class ShortestPathSolution extends AbstractSolution {
 
     // Optimal solution.
@@ -26,6 +27,7 @@ public class ShortestPathSolution extends AbstractSolution {
      */
     public ShortestPathSolution(ShortestPathData data, Status status) {
         super(data, status);
+        this.path = new Path(data.getGraph());
     }
 
     /**

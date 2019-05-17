@@ -13,35 +13,50 @@ import org.insa.algo.AbstractSolution.Status;
 
 public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 
+	protected BinaryHeap<Label> tas;
+	protected Label labels[];
+	
     public DijkstraAlgorithm(ShortestPathData data) {
         super(data);
     }
+    
+    void InitRun (ShortestPathData data) {
+    	this.tas = new BinaryHeap<Label>();
 
+        this.labels=new Label[data.getGraph().size()];
+        for( Node n : this.data.getGraph().getNodes()) {
+        	labels[n.getId()]=new Label(n);
+        	if(n.equals(data.getOrigin())) {
+        		labels[n.getId()].setCost(0);
+                this.tas.insert(labels[n.getId()]);
+                
+        	}
+        }
+    }
+    
+    
+    
     @Override
     protected ShortestPathSolution doRun() {
         ShortestPathData data = getInputData();
         ShortestPathSolution solution = null;
         
-        //INITIALISATION
-        BinaryHeap<Label> tas = new BinaryHeap<Label>();
-
-        Label labels[]=new Label[data.getGraph().size()];
-        for( Node n : this.data.getGraph().getNodes()) {
-        	labels[n.getId()]=new Label(n);
-        	if(n.equals(data.getOrigin())) {
-        		labels[n.getId()].setCost(0);
-                tas.insert(labels[n.getId()]);
-                
-        	}
+        //TEST DATA
+        if(data.getDestination()==null || data.getOrigin()==null || data.getGraph() == null) {
+        	solution = new ShortestPathSolution(data,Status.INFEASIBLE,new Path(data.getGraph()));
+    		return solution;
         }
+        
+        InitRun(data);
+        
      // Notify observers about the first event (origin processed).
         notifyOriginProcessed(data.getOrigin());
         
         //PROCEDURE
         Label x = null, laby=null;
-        while(!tas.isEmpty()) {
-        	x=tas.findMin();
-        	tas.remove(x);
+        while(!this.tas.isEmpty()) {
+        	x=this.tas.findMin();
+        	this.tas.remove(x);
         	x.setMark(true);
         	notifyNodeReached(x.getCurrentNode());
         	
@@ -59,8 +74,8 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         		laby = labels[y.getDestination().getId()];// on recupère le label associé a l'origine de l'arc y
         	
         		
-        		if(laby.getMark() == false && laby.getCost() >(x.getCost() + y.getLength())) {
-        			laby.setCost(x.getCost() + y.getLength());
+        		if(laby.getMark() == false && laby.getCost() >(x.getCost() + data.getCost(y))) {
+        			laby.setCost(x.getCost() + data.getCost(y));
         			laby.setPred(y);
         			
         			try { //on insere le label sil n'etait pas dans la liste, on a pas d'iterator pour parcourir un tas donc on l'enleve puis le reinsere

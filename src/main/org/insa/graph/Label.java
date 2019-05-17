@@ -7,7 +7,7 @@ import org.insa.graph.Node;
 public class Label implements Comparable<Label> {
 	private Node currentNode;
 	private Boolean mark;
-	private double cost ;
+	protected double cost ;
 	private Arc pred;
 	
 	public Label(Node n) {
@@ -51,7 +51,7 @@ public class Label implements Comparable<Label> {
 
 	   
 	public int compareTo(Label other) {
-	    return Double.compare(this.cost, other.getCost());
+	    return Double.compare(this.getCost(), other.getCost());
 	}
 
 }
