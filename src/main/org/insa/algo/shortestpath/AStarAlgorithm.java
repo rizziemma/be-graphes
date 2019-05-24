@@ -24,7 +24,7 @@ public class AStarAlgorithm extends DijkstraAlgorithm {
 
         this.labels=new LabelStar[data.getGraph().size()];
         for( Node n : this.data.getGraph().getNodes()) {
-        	labels[n.getId()]=new LabelStar(n,data.getDestination());
+        	labels[n.getId()]=new LabelStar(n,data.getDestination(),data.getMode(),data.getMaximumSpeed());
         	if(n.equals(data.getOrigin())) {
         		labels[n.getId()].setCost(0);
                 this.tas.insert(labels[n.getId()]);

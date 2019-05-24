@@ -43,8 +43,8 @@ public class FileLauncher {
 			samples = Integer.parseInt(br.readLine());
 			i=0;
 			System.out.println("creation des fichiers de resultats");
-			String fpathR1 = f.getName() + "R1";
-			String fpathR2 = f.getName() + "R2";
+			String fpathR1 = f.getName().substring(0,f.getName().length()-4) + "R1.txt";
+			String fpathR2 = f.getName().substring(0,f.getName().length()-4) +  "R2.txt";
 			File fR1 = new File("./ResTest/"+fpathR1);
 			File fR2 = new File("./ResTest/"+fpathR2);
 			fR1.createNewFile();

@@ -38,7 +38,7 @@ public class DataGenerator {
 		G = reader.read();
 		FileOutputStream fos = new FileOutputStream(fpath);
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
-		samples = 20;
+		samples = 100;
 		bw.write((map));
 		bw.newLine();
 		bw.write((Integer.toString(type)));
