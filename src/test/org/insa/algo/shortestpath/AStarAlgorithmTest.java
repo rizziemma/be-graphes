@@ -9,23 +9,14 @@ import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-import org.insa.algo.shortestpath.*;
-
+import org.insa.algo.ArcInspectorFactory;
+import org.insa.graph.Graph;
+import org.insa.graph.io.BinaryGraphReader;
+import org.insa.graph.io.GraphReader;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.util.Collections;
-import org.insa.graph.*;
-import org.insa.graph.RoadInformation.RoadType;
-import org.insa.graph.io.BinaryGraphReader;
-import org.insa.graph.io.GraphReader;
-
-import org.insa.algo.utils.ElementNotFoundException;
-import org.insa.algo.AbstractSolution.Status;
-import org.insa.algo.ArcInspectorFactory;
-
-
-public class DjikstraAlgorithmTest {
+public class AStarAlgorithmTest {
 
 	//___________ ATTRIBUTS_______________ 
 
@@ -63,30 +54,27 @@ public class DjikstraAlgorithmTest {
 		PathLength3 = new ShortestPathData(g3,g3.getNodes().get(38048),g3.getNodes().get(679966), ArcInspectorFactory.getAllFilters().get(0));
 		PathTime3 = new ShortestPathData(g3,g3.getNodes().get(38048),g3.getNodes().get(679966), ArcInspectorFactory.getAllFilters().get(2));
 		infeasiblePath = new ShortestPathData(g2,g2.getNodes().get(642747),g2.getNodes().get(25215), ArcInspectorFactory.getAllFilters().get(0));
+		
+		
+		AStarAlgorithm D1 = new AStarAlgorithm(emptyPath);
+		AStarAlgorithm D2 = new AStarAlgorithm(singleNodePath);
+		AStarAlgorithm D3 = new AStarAlgorithm(PathLength1);
+		AStarAlgorithm D4 = new AStarAlgorithm(PathTime1);
+		AStarAlgorithm D5 = new AStarAlgorithm(PathLength2);
+		AStarAlgorithm D6 = new AStarAlgorithm(PathTime2);
+		AStarAlgorithm D7 = new AStarAlgorithm(PathLength3);
+		AStarAlgorithm D8 = new AStarAlgorithm(PathTime3);
+		AStarAlgorithm D9 = new AStarAlgorithm(infeasiblePath);
 
 		
-		System.out.println("Debut dijkstra");
-		DijkstraAlgorithm D1 = new DijkstraAlgorithm(emptyPath);
-		DijkstraAlgorithm D2 = new DijkstraAlgorithm(singleNodePath);
-		DijkstraAlgorithm D3 = new DijkstraAlgorithm(PathLength1);
-		DijkstraAlgorithm D4 = new DijkstraAlgorithm(PathTime1);
-		DijkstraAlgorithm D5 = new DijkstraAlgorithm(PathLength2);
-		DijkstraAlgorithm D6 = new DijkstraAlgorithm(PathTime2);
-		DijkstraAlgorithm D7 = new DijkstraAlgorithm(PathLength3);
-		DijkstraAlgorithm D8 = new DijkstraAlgorithm(PathTime3);
-		DijkstraAlgorithm D9 = new DijkstraAlgorithm(infeasiblePath);
-
-		/*
 		RESemptyPath = D1.doRun();
 		RESsingleNodePath = D2.doRun();
 		RESPathLength1 = D3.doRun();
 		RESPathTime1 = D4.doRun();
 		RESPathLength2 = D5.doRun();
 		RESPathTime2 = D6.doRun();
-		*/
 		RESPathLength3 = D7.doRun();
 		RESPathTime3 = D8.doRun();
-		/*
 		RESinfeasiblePath = D9.doRun();
 		
 		
@@ -94,10 +82,9 @@ public class DjikstraAlgorithmTest {
 		BellmanFordAlgorithm B4 = new BellmanFordAlgorithm(PathTime1);
 		BellmanFordAlgorithm B5 = new BellmanFordAlgorithm(PathLength2);
 		BellmanFordAlgorithm B6 = new BellmanFordAlgorithm(PathTime2);
-		*/
 		BellmanFordAlgorithm B7 = new BellmanFordAlgorithm(PathLength3);
 		BellmanFordAlgorithm B8 = new BellmanFordAlgorithm(PathTime3);
-		/*
+		
 		System.out.println("Debut Bellman 1");
 		BelRESPathLength1 = B3.doRun();
 		System.out.println("Debut Bellman 2");
@@ -106,19 +93,19 @@ public class DjikstraAlgorithmTest {
 		BelRESPathLength2 = B5.doRun() ;
 		System.out.println("Debut Bellman 4");
 		BelRESPathTime2 = B6.doRun();
-		*/
 		System.out.println("Debut Bellman 5");
 		BelRESPathLength3 = B7.doRun() ;
 		System.out.println("Debut Bellman 6");
 		BelRESPathTime3 = B8.doRun() ;
 		System.out.println("Debut tests");
-
+		
 	}
 
-/*
+
 	//____________METHODES________________
 	@Test //VALIDE
 	public void testPathIsValid() {
+		System.out.println("Debut validité");
 		assertTrue(RESemptyPath.getPath().isValid());
 		assertTrue(RESsingleNodePath.getPath().isValid());
 		assertTrue(RESPathLength1.getPath().isValid());
@@ -132,6 +119,7 @@ public class DjikstraAlgorithmTest {
 
 	@Test //FEASIBLE
 	public void testPathStatus() {
+		System.out.println("Debut feasible");
 		assertFalse(RESemptyPath.isFeasible());
 		assertTrue(RESsingleNodePath.isFeasible());
 		assertTrue(RESPathLength1.isFeasible());
@@ -143,68 +131,85 @@ public class DjikstraAlgorithmTest {
 		assertFalse(RESinfeasiblePath.isFeasible());
 	}
 	
-	*/
+	
 	@Test //CHEMIN EGAL
-	public void testEqualPath() {
+	public void testEqualPath11() {
+		System.out.println("Debut path");
 		int i;
-
-		/*
-		System.out.println("Debut path 1");
-
 		for(i=0;i<BelRESPathLength1.getPath().getArcs().size();i++) {
 			assertEquals(RESPathLength1.getPath().getArcs().get(i),BelRESPathLength1.getPath().getArcs().get(i));
 		}
 		
 		
-		System.out.println("Debut path 2");
-
+	}
+	
+	@Test //CHEMIN EGAL
+	public void testEqualPath12() {
+		int i;
 		for(i=0;i<BelRESPathTime1.getPath().getArcs().size();i++) {
 			assertEquals(RESPathTime1.getPath().getArcs().get(i),BelRESPathTime1.getPath().getArcs().get(i));
 		}
 		
+	}
+	
+	@Test //CHEMIN EGAL
+	public void testEqualPath21() {
+		int i;
+		for(i=0;i<BelRESPathTime2.getPath().getArcs().size();i++) {
+			assertEquals(RESPathTime2.getPath().getArcs().get(i),BelRESPathTime2.getPath().getArcs().get(i));
+		}
 		
-		System.out.println("Debut path 3");
-
+	}
+	
+	@Test //CHEMIN EGAL
+	public void testEqualPath22() {
+		int i;
 		for(i=0;i<BelRESPathLength2.getPath().getArcs().size();i++) {
 			assertEquals(RESPathLength2.getPath().getArcs().get(i),BelRESPathLength2.getPath().getArcs().get(i));
 		}
 		
 		
-		System.out.println("Debut path 4");
-
-		for(i=0;i<BelRESPathTime2.getPath().getArcs().size();i++) {
-			assertEquals(RESPathTime2.getPath().getArcs().get(i),BelRESPathTime2.getPath().getArcs().get(i));
-		}
-		
-		*/
-		System.out.println("Debut path 5");
-		assertEquals(RESPathLength3.getPath().getArcs().size(),BelRESPathLength3.getPath().getArcs().size());
+	}
+	
+	@Test //CHEMIN EGAL
+	public void testEqualPath31() {
+		int i;
 		for(i=0;i<BelRESPathLength3.getPath().getArcs().size();i++) {
 			assertEquals(RESPathLength3.getPath().getArcs().get(i),BelRESPathLength3.getPath().getArcs().get(i));
 		}
 		
 		
-		System.out.println("Debut path 6");
-		assertEquals(RESPathTime3.getPath().getArcs().size(),BelRESPathTime3.getPath().getArcs().size());
+	}
+	
+	@Test //CHEMIN EGAL
+	public void testEqualPath32() {
+		int i;
 		for(i=0;i<BelRESPathTime3.getPath().getArcs().size();i++) {
 			assertEquals(RESPathTime3.getPath().getArcs().get(i),BelRESPathTime3.getPath().getArcs().get(i));
 		}
 		
-		
-		
 	}
+	
+	
 	@Test //OPTIMAL
 	public void testPathOptimal() {
-		/*
+		System.out.println("Debut optimal");
 		assertEquals(RESPathLength1.getPath().getLength(),BelRESPathLength1.getPath().getLength(),1e-6);
+		
+		
 		assertEquals(RESPathTime1.getPath().getMinimumTravelTime(),BelRESPathTime1.getPath().getMinimumTravelTime(),1e-6);
+		
+		
 		assertEquals(RESPathLength2.getPath().getLength(),BelRESPathLength2.getPath().getLength(),1e-6);
+		
+		
 		assertEquals(RESPathTime2.getPath().getMinimumTravelTime(),BelRESPathTime2.getPath().getMinimumTravelTime(),1e-6);
-		*/
-		assertEquals(RESPathLength3.getPath().getLength(),BelRESPathLength3.getPath().getLength(),1e-6);		
+		
+		
+		assertEquals(RESPathLength3.getPath().getLength(),BelRESPathLength3.getPath().getLength(),1e-6);	
+		
+		
 		assertEquals(RESPathTime3.getPath().getMinimumTravelTime(),BelRESPathTime3.getPath().getMinimumTravelTime(),1e-6);
 		
 	}
 }
-
-
