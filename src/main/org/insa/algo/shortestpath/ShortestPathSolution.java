@@ -10,6 +10,7 @@ public class ShortestPathSolution extends AbstractSolution {
 
     // Optimal solution.
     private Path path;
+    private int visited;
 
     /**
      * {@inheritDoc}
@@ -41,7 +42,13 @@ public class ShortestPathSolution extends AbstractSolution {
         super(data, status);
         this.path = path;
     }
-
+    
+    public ShortestPathSolution(ShortestPathData data, Status status, Path path,int vis) {
+        super(data, status);
+        this.path = path;
+        this.visited = vis;
+    }
+    
     @Override
     public ShortestPathData getInputData() {
         return (ShortestPathData) super.getInputData();
@@ -52,6 +59,10 @@ public class ShortestPathSolution extends AbstractSolution {
      */
     public Path getPath() {
         return path;
+    }
+    
+    public int getVisited() {
+    	return this.visited;
     }
 
     @Override

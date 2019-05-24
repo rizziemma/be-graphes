@@ -38,7 +38,7 @@ public class DataGenerator {
 		G = reader.read();
 		FileOutputStream fos = new FileOutputStream(fpath);
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
-		samples = 100;
+		samples = 20;
 		bw.write((map));
 		bw.newLine();
 		bw.write((Integer.toString(type)));
@@ -47,7 +47,7 @@ public class DataGenerator {
 		bw.newLine();
 		int i;
 		Random rand = new Random();
-		for(i=0;i<samples;i++) {
+		for(i=0;i<samples*2;i++) {
 			bw.write((rand.nextInt(G.getNodes().size())+ " "+rand.nextInt(G.getNodes().size())));
 			bw.newLine();
 		}
@@ -56,7 +56,7 @@ public class DataGenerator {
 	}
 
 	 public static void main(String[] args) throws Exception {
-		 initAll("fractal");
+		 initAll("belgium");
 		 if(f.exists() && ! f.isDirectory()) {
 			 System.out.println("INIT OK");
 		 }

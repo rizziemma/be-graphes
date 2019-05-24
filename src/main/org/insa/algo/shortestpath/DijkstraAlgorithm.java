@@ -40,6 +40,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
     protected ShortestPathSolution doRun() {
         ShortestPathData data = getInputData();
         ShortestPathSolution solution = null;
+        int visited = 00;
         
         //TEST DATA
         if(data.getDestination()==null || data.getOrigin()==null || data.getGraph() == null) {
@@ -83,6 +84,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         			}
         			catch (ElementNotFoundException e) {
         				//nothing
+        				visited ++;
         			}
         			tas.insert(laby);
         		}
@@ -115,7 +117,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         Collections.reverse(nodesSol);
         
         Path p = Path.createShortestPathFromNodes(this.data.getGraph(), nodesSol);
-        solution = new ShortestPathSolution(data,Status.OPTIMAL,p);
+        solution = new ShortestPathSolution(data,Status.OPTIMAL,p,visited);
         return solution;
     }
 
