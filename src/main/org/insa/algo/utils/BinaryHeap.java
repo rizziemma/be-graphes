@@ -144,21 +144,44 @@ public class BinaryHeap<E extends Comparable<E>> implements PriorityQueue<E> {
 
     @Override
     public void remove(E x) throws ElementNotFoundException {
-    	
-    	if(this.currentSize == 0) {
-    		throw new ElementNotFoundException(x);
-    	}
-    	int i = array.indexOf(x);
-    	if((i!= -1) && (i < this.currentSize)) {
-	    	array.set(i,array.get(this.currentSize-1));
-	    	
-    		//this.percolateUp(i);
-    		this.percolateDown(i);
-	    	this.currentSize--;
-	    	
-    	}
-    	else {
-    		throw new ElementNotFoundException(x);
+		 if (this.currentSize==0) {
+		     throw new ElementNotFoundException(x);
+		 }
+		 else {
+			 int index=this.array.indexOf(x);
+			 /*int index=-1;
+			 for (int i=0;i<this.currentSize;i++) {
+				 if (this.array.get(i).equals(x)) {
+					 index=i;
+					 break;
+				 }
+			 }*/
+			 //if (index>=this.currentSize) {
+			 if (index==-1) {
+				 throw new ElementNotFoundException(x);
+			 }
+			 if (index==0) {
+				 this.deleteMin();
+			 }
+			 else{
+				 if (index==this.currentSize-1) {
+                     this.array.remove(currentSize-1);
+                     this.currentSize-=1;
+				 }else {
+                     // on a le dernier dans monElement
+                     E monElement = this.array.get(this.currentSize-1);
+                     // Met monElement à la position du dernier
+                     this.arraySet(index,monElement);
+                     this.array.remove(currentSize-1);
+                     this.currentSize-=1;
+                     if (this.array.get(index_parent(index)).compareTo(this.array.get(index))<0) {
+                         percolateDown(index);
+                     }else
+                     {
+                         percolateUp(index);
+                     }
+				 }
+			 }
     	}
     }
 
